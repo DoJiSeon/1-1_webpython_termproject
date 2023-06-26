@@ -280,7 +280,7 @@ def runGame():
             
         if player_posY >= 0:
             if player_posY <= 700:
-                screen.blit(player.image, (player_posX, player_posY)) # 비행기의 X,Y 좌표 넣어서 위치시켜줌
+                screen.blit(player.image, (player_posX, player_posY))
                 y = player_posY
                 
             else:
