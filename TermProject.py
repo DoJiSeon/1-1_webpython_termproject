@@ -160,7 +160,34 @@ class walkingEnemy(pygame.sprite.Sprite):
         
     def get_rect(self):
         return self.rect
+    
+    
+class mushroom(pygame.sprite.Sprite):
+    global player_posY, player_rect
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        mushroom = pygame.image.load("1-1_webpython_termproject\sprite\mushroom.png")
+        mushroom = pygame.transfrom.scale(mushroom,(100,100))
+        self.image = mushroom
+        self.mushroom_x = 300
+        self.mushroom_y = player_posY
+        self.mushroom_rect = self.get_rect()
+        self.mushroom_rect.centerx = self.mushroom_x
+        self.mushroom_rect.centery = self.mushroom_y
+        self.start_time_count = pygame.time.get_ticks()
+        screen.blit(self.image,(self.mushroom_x,self.mushroom_y))
         
+    def is_collision_check(self,view):
+        if self.mushroom_rect.colliderect(view):
+            del(self)
+            player_posY = player_posY- 100
+            
+    def time_check(self):
+        self.seconds = (pygame.time.get_ticks()-self.start_time_count)/1000
+        self.seconds = round(self.seconds)
+        if(self.seconds == 5):
+            del(self)        
+            
 # 3. pygame에 사용되는 전역변수 선언
 WHITE = (255,255,255)
 screen_height = 900
@@ -259,15 +286,16 @@ def runGame():
                 if event.key== pygame.K_UP: # 좌표상에서 Y + 할수록 아래로 가게되므로 - 해준다.
                     is_jump_up = True
                     is_jump_down = False
-                elif event.key == pygame.K_DOWN:
+                """ elif event.key == pygame.K_DOWN:
                     is_jump_down = True
-                    is_jump_up = False
+                    is_jump_up = False """
             
         if is_jump_up == True:
             y -= 100
             player_posY = y
             y = 0
             is_jump_up = False
+            mushroom()
         if is_jump_down == True:
             y += 100
             player_posY = y
@@ -377,6 +405,10 @@ def draw_gameover():
     text_rect.centerx = round(screen_width/2)
     text_rect.centery = round(screen_height/2)
     screen.blit(gameoverscore,[text_rect.x,text_rect.y])
+    
+def create_mushroom():
+    mushroom = mushroom()
+    
 runGame()
 pygame.quit()
 
