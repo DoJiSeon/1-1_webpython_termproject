@@ -166,27 +166,43 @@ class mushroom(pygame.sprite.Sprite):
     global player_posY, player_rect
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        mushroom = pygame.image.load("1-1_webpython_termproject\sprite\mushroom.png")
-        mushroom = pygame.transfrom.scale(mushroom,(100,100))
+        mushroom = pygame.image.load("sprite\mushroom.png")
+        mushroom = pygame.transform.scale(mushroom,(100,100))
         self.image = mushroom
         self.mushroom_x = 300
-        self.mushroom_y = player_posY
-        self.mushroom_rect = self.get_rect()
-        self.mushroom_rect.centerx = self.mushroom_x
-        self.mushroom_rect.centery = self.mushroom_y
+        self.mushroom_y = player_posY + 100
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.mushroom_x
+        self.rect.centery = self.mushroom_y
         self.start_time_count = pygame.time.get_ticks()
         screen.blit(self.image,(self.mushroom_x,self.mushroom_y))
         
     def is_collision_check(self,view):
-        if self.mushroom_rect.colliderect(view):
+        if self.rect.colliderect(view):
             del(self)
             player_posY = player_posY- 100
-            
+
+    def init_self(self):
+        self.mushroom_x = 300
+        self.mushroom_y = player_posY + 100
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.mushroom_x
+        self.rect.centery = self.mushroom_y
+        screen.blit(self.image,(self.mushroom_x,self.mushroom_y))
+        
+    def change_y(self,y): # 버섯들의 위치가 변환될 때
+        self.mushroom_y += 100        
+        self.rect.centerx = self.mushroom_x
+        self.rect.centery = self.mushroom_y
+        screen.blit(self.image,(self.mushroom_x,self.mushroom_y))
+        
+        
     def time_check(self):
         self.seconds = (pygame.time.get_ticks()-self.start_time_count)/1000
         self.seconds = round(self.seconds)
         if(self.seconds == 5):
             del(self)        
+            
             
 # 3. pygame에 사용되는 전역변수 선언
 WHITE = (255,255,255)
@@ -210,19 +226,38 @@ is_jump_down = False
 player_posX = 300
 player_posY = 700
 
-
+# 버섯 이용하기
+mushroom1 = mushroom()
+mushroom2 = mushroom()
+mushroom3 = mushroom()
+mushroom4 = mushroom()
+mushroom5 = mushroom()
+mushroom6 = mushroom()
+mushroom7 = mushroom()
+    
+mushroom_y = 700
+mushrooms = []
+mushrooms.append(mushroom1)
+mushrooms.append(mushroom2)
+mushrooms.append(mushroom3)
+mushrooms.append(mushroom4)
+mushrooms.append(mushroom5)
+mushrooms.append(mushroom6)
+mushrooms.append(mushroom7)
 
 # 4. pygame 무한루프
 def runGame():
     global done, screen_height, background, backgorund1_x, background2_x
     global flying_enemies, walking_enemies
     global player_posX, player_posY, is_jump_up,is_jump_down
+    global mushrooms
 
     start_time_count = pygame.time.get_ticks()
 
     x = 300 # 주인공의 X 좌표
     y = 700 # 주인공의 Y 좌표
     
+        
     # 캐릭터 생성
     flyingEnemy1 = FlyingEnemy()
     flyingEnemy1.change_flyingEnemy()
@@ -295,7 +330,7 @@ def runGame():
             player_posY = y
             y = 0
             is_jump_up = False
-            mushroom()
+            
         if is_jump_down == True:
             y += 100
             player_posY = y
@@ -407,7 +442,8 @@ def draw_gameover():
     screen.blit(gameoverscore,[text_rect.x,text_rect.y])
     
 def create_mushroom():
-    mushroom = mushroom()
+    global mushrooms, player_posY
+    
     
 runGame()
 pygame.quit()
